@@ -1,4 +1,6 @@
-package src.voz;
+package voz;
+
+
 
 import edu.cmu.sphinx.api.Configuration;
 import edu.cmu.sphinx.api.LiveSpeechRecognizer;

@@ -1,12 +1,20 @@
-package src;
+public class TTS {
+    public static void main(String[] args) {
+        try {
+            // Configura a voz
+            System.setProperty("freetts.voices", "com.sun.speech.freetts.en.us.cmu_us_arctic_low");
 
-public class Main {
-    public Main() 
-    {
-    
-    }
-    public static void main(String[] var0) 
-    {
-        System.out.println("Bem-vindo ao seu Mini-Assistente de Voz!");
+            // Cria a voz
+            Voice voice = VoiceManager.getInstance().getVoice("kevin16");
+            if (voice != null) {
+                voice.allocate(); // Aloca recursos para a voz
+                voice.speak("Olá, como você está?"); // Fala o texto
+                voice.deallocate(); // Libera os recursos
+            } else {
+                System.out.println("Voz não encontrada.");
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 }
