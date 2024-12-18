@@ -1,0 +1,4 @@
+#JSGF V1.0;
+grammar commands;
+
+public <comando> = ( register | login | exit);
