@@ -1,0 +1,38 @@
+#JSGF V1.0;
+grammar ages;
+
+// Unidades simples
+<units> = one | two | three | four | five | six | seven | eight | nine;
+
+// Números de 10 a 19
+<teens> = ten | eleven | twelve | thirteen | fourteen | fifteen | sixteen | seventeen | eighteen | nineteen;
+
+// De zero a dezenove (zero incluído)
+<basic> = zero | <units> | <teens>;
+
+// Dezenas (20,30,40,...90)
+<tensWord> = twenty | thirty | forty | fifty | sixty | seventy | eighty | ninety;
+
+// De 0 a 99
+// 0-19 é <basic>
+// 20,30,...90 é <tensWord>
+// 21-29,31-39,...91-99 é <tensWord> <units>
+<oneToNinetyNine> = <basic> | (<tensWord> [<units>]);
+
+// De 0 a 30 (para compor o intervalo depois de cem)
+// 0-19 é <basic>
+// 20,21,...29 é twenty [<units>]
+// 30 é thirty
+<oneToThirty> = <basic> | twenty [<units>] | thirty;
+
+// 100 a 130
+// 100: one hundred
+// 101 a 130: one hundred and <oneToThirty>
+<oneHundredPrefix> = one hundred;
+<oneHundredToOneThirty> = <oneHundredPrefix> [and <oneToThirty>];
+
+// Combina tudo para ter 0 a 130
+<zeroToOneThirty> = <oneToNinetyNine> | <oneHundredToOneThirty>;
+
+// Regra pública que representa a idade de 0 a 130
+public <idade> = <zeroToOneThirty>;

@@ -1,7 +1,6 @@
 package src;
-package comandos;
 
-import dados.BancoDados;
+import src.BancoDados;
 
 import java.sql.ResultSet;
 
