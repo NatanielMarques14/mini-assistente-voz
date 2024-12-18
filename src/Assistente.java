@@ -46,19 +46,19 @@ public class Assistente { //Assistente é a classe principal que vai organizar o
         tts.speak("Say your name");
         String name = stt.getComando();
 
-        tts.speak("Diga sua idade.");
+        tts.speak("Say your age");
         int age = Integer.parseInt(stt.getComando()); //como o listen retorna uma string usamos a função do parseInt para converter em int
 
-        tts.speak("Diga seu tipo sanguíneo.");
+        tts.speak("Say your blood type");
         String bloodType = stt.getComando();
 
-        tts.speak("Diga seu nome de usuário.");
+        tts.speak("Say your username");
         String username = stt.getComando();
 
-        tts.speak("Diga sua senha.");
+        tts.speak("Say your password");
         String password = stt.getComando();
 
-        tts.speak("Você está apto para doar sangue?");
+        tts.speak("Can you donate blood?");
         String canDonate = stt.getComando();
 
         boolean success = comandos.register(name, age, bloodType, username, password, canDonate); //salva o registro no banco de dados
@@ -104,10 +104,10 @@ public class Assistente { //Assistente é a classe principal que vai organizar o
     
 
     private void handleLogin() {//faz o login 
-        tts.speak("Diga seu nome de usuário.");
+        tts.speak("Say your username");
         String username = stt.getComando();
     
-        tts.speak("Diga sua senha.");
+        tts.speak("Say your password");
         String password = stt.getComando();
     
         String user = comandos.login(username, password);
