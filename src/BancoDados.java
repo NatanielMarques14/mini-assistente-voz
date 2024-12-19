@@ -1,75 +1,115 @@
 package src;
-
 import java.sql.*;
+//import java.sql.Connection;
+//import java.sql.DriverManager;
+//import java.sql.PreparedStatement;
+//import java.sql.SQLException;
+//import java.sql.ResultSet;
 
-public class BancoDados {
+//colocar
+//INSERT INTO users (name, age, bloodType, username, password, canDonate)
+//VALUES ('Admin', 20, 'A', 'admin', '1234', 'yes');
+//no sql
+
+//add o sangue no grammars
+
+public class BancoDados{
     private static final String URL = "jdbc:mysql://localhost:3306/bancoDados";
-    private static final String USER = "root@localhost";
+    //private static final String USER = "root@localhost";
+    private static final String USER = "root";
     private static final String PASSWORD = "Jo08ma02@";
 
-    public static String getNextUsername() throws SQLException {
-        try (Connection conexao = DriverManager.getConnection(URL, USER, PASSWORD)) {
-            String query = "SELECT username FROM usuarios ORDER BY id DESC LIMIT 1";
-            PreparedStatement stmt = conexao.prepareStatement(query);
-            ResultSet rs = stmt.executeQuery();
-            if (rs.next()) {
-                String lastUsername = rs.getString("username");
-                if (lastUsername.startsWith("user")) {
-                    int lastNumber = Integer.parseInt(lastUsername.replace("user", ""));
-                    return "user" + (lastNumber + 1);
+    public BancoDados() throws SQLException { //construtuor
+        try (Connection conn = DriverManager.getConnection(URL, USER, PASSWORD)) {
+            // ve se o usuário admin existe
+            String checkAdminSQL = "SELECT COUNT(*) FROM usuarios WHERE username = 'admin'";
+            PreparedStatement checkAdminStmt = conn.prepareStatement(checkAdminSQL);
+            ResultSet rs = checkAdminStmt.executeQuery();
+            rs.next();
+
+            if (rs.getInt(1) == 0) { // Se admin não existir, cria
+                String insertAdminPessoas = "INSERT INTO pessoas (nome, idade, tipoSanguineo, seDoador) VALUES (?, ?, ?, ?)";
+                String insertAdminUsuarios = "INSERT INTO usuarios (username, senha) VALUES (?, ?)";
+
+                try (PreparedStatement stmtPessoas = conn.prepareStatement(insertAdminPessoas);
+                     PreparedStatement stmtUsuarios = conn.prepareStatement(insertAdminUsuarios)) {
+
+                    // Insere dados na tabela "pessoas"
+                    stmtPessoas.setString(1, "Admin");
+                    stmtPessoas.setInt(2, 20);
+                    stmtPessoas.setString(3, "A");
+                    stmtPessoas.setString(4, "yes");
+                    stmtPessoas.executeUpdate();
+
+                    // Insere dados na tabela "usuarios"
+                    stmtUsuarios.setString(1, "admin");
+                    stmtUsuarios.setString(2, "1234");
+                    stmtUsuarios.executeUpdate();
+
+                    System.out.println("Admin user created successfully!");
                 }
             }
-            // Caso não haja usuários registrados, retorna o primeiro
-            return "user1";
         }
     }
 
+    public static void registerUser (String name, int age, String bloodType, String username, String password, String canDonate) throws SQLException{ 
+        try(Connection conexao = DriverManager.getConnection(URL, USER, PASSWORD)){
 
-    public static String getPasswordFromUsername(String username) {
-        return username.replace("user", ""); // A senha será o número do username
-    }
+        //String colocarDadosPessoas = "INSERT INTO pessoas (nome, idade, tipoSanguineo, seDoador)";
+        //String colocarDadosUsuarios = "INSERT INTO usuarios (username, senha)";
+        String sqlPessoas = "INSERT INTO pessoas (nome, idade, tipoSanguineo, seDoador) VALUES (?, ?, ?, ?)";
+        String sqlUsuarios = "INSERT INTO usuarios (username, senha) VALUES (?, ?)";
 
-    public static void registerUser(String name, int age, String bloodType, String canDonate) throws SQLException {
-        try (Connection conexao = DriverManager.getConnection(URL, USER, PASSWORD)) {
+        //PreparedStatement inserirPessoas = conexao.prepareStatement(colocarDadosPessoas);
+        //PreparedStatement inserirUsuarios = conexao.prepareStatement(colocarDadosUsuarios);
 
-            // Gerar próximo username e senha
-            String username = getNextUsername();
-            String password = getPasswordFromUsername(username);
+        try (Connection conn = DriverManager.getConnection(URL, USER, PASSWORD);
+        PreparedStatement stmtPessoas = conn.prepareStatement(sqlPessoas);
+        PreparedStatement stmtUsuarios = conn.prepareStatement(sqlUsuarios)) {
+        
+        // Tabela pessoas
+        stmtPessoas.setString(1, name);
+        stmtPessoas.setInt(2, age);
+        stmtPessoas.setString(3, bloodType);
+        stmtPessoas.setString(4, canDonate);
+        stmtPessoas.executeUpdate();
 
+        // Tabela usuarios
+        stmtUsuarios.setString(1, username);
+        stmtUsuarios.setString(2, password);
+        stmtUsuarios.executeUpdate();
 
-            String insertPerson = "INSERT INTO pessoas (nome, idade, tipoSanguineo, seDoador) VALUES (?, ?, ?, ?)";
-            String insertUser = "INSERT INTO usuarios (username, senha) VALUES (?, ?)";
-
-            PreparedStatement stmtPerson = conexao.prepareStatement(insertPerson);
-            stmtPerson.setString(1, name);
-            stmtPerson.setInt(2, age);
-            stmtPerson.setString(3, bloodType);
-            stmtPerson.setString(4, canDonate);
-            stmtPerson.executeUpdate();
-
-            PreparedStatement stmtUser = conexao.prepareStatement(insertUser);
-            stmtUser.setString(1, username);
-            stmtUser.setString(2, password);
-            stmtUser.executeUpdate();
-
-            System.out.println("User registered successfully!");
-            System.out.println("Username: " + username + ", Password: " + password);
+        System.out.println("User successfully registered!");
+        
         }
-
-        catch (SQLException e) {
-            System.out.println("Error while registering user: " + e.getMessage());
-            throw e;
         }
     }
 
-    public static void main(String[] args) {
-        try {
-            BancoDados.registerUser("Filipe", 19, "AB", "Sim");
-        } catch (SQLException e) {
-            System.out.println("Error: " + e.getMessage());
-        }
+/*public static void main(String[] s){
+    try{
+        BancoDados.registerUser("Filipe", 19, "AB", "filipeac", "1234", "Sim");
+    }
+    catch(SQLException e){
+        System.out.println("Erro: "+ e.getMessage());
+    }
+    
+*/
+
+public ResultSet login(String username, String password) throws SQLException {
+    String sql = "SELECT pessoas.nome FROM usuarios INNER JOIN pessoas ON usuarios.username = ? AND usuarios.senha = ?";
+    Connection conn = DriverManager.getConnection(URL, USER, PASSWORD);
+    PreparedStatement stmt = conn.prepareStatement(sql);
+    stmt.setString(1, username);
+    stmt.setString(2, password);
+    return stmt.executeQuery();
+    } 
+
+public ResultSet getAllUsers() throws SQLException {
+        String sql = "SELECT * FROM pessoas";
+        Connection conn = DriverManager.getConnection(URL, USER, PASSWORD);
+        PreparedStatement stmt = conn.prepareStatement(sql);
+        return stmt.executeQuery();
     }
 
-    public static void registerUser(String name, int age, String bloodType, String username, String password, String canDonate) {
-    }
+
 }
