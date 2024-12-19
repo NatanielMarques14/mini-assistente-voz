@@ -12,9 +12,9 @@ public class Comandos {
         this.db = db;
     }
 
-    public boolean register(String name, int age, String bloodType, String canDonate, String username, String password) {
+    public boolean register(String name, String age, String bloodType, String canDonate, String pessoa_id, String password) {
         try {
-            BancoDados.registerUser(name, age, bloodType, canDonate, username, password);
+            BancoDados.registerUser(name, age, bloodType, canDonate, pessoa_id, password);
             return true;
         } catch (Exception e) {
             System.err.println("Erro no registro: " + e.getMessage());
@@ -22,8 +22,8 @@ public class Comandos {
         }
     }
 
-    public boolean isAdmin(String username, String password) {
-        return username.equals("admin") && password.equals("1234");
+    public boolean isAdmin(String pessoa_id, String password) {
+        return pessoa_id.equals("admin") && password.equals("1234");
     }
     
     public ResultSet getAllUsers() throws SQLException {
@@ -31,14 +31,14 @@ public class Comandos {
     return banco.getAllUsers();
     }
 
-    public ResultSet getUserInfo(String username, String password) throws SQLException {
-        return db.login(username, password); // Chama o método login da classe BancoDados
+    public ResultSet getUserInfo(String pessoa_id, String password) throws SQLException {
+        return db.login(pessoa_id, password); // Chama o método login da classe BancoDados
     }
     
 
-    public String login(String username, String password) {
+    public String login(String pessoa_id, String password) {
         try {
-            ResultSet rs = db.login(username, password);
+            ResultSet rs = db.login(pessoa_id, password);
             if (rs.next()) {
                 return rs.getString("name");
             } else {
