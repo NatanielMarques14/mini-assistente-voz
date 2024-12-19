@@ -1,7 +1,7 @@
 package src;
 
-import src.voz.TTS;
-import src.voz.STT; //classes importadas do pacote voz representam as funcionalidades de entrada e saida de voz
+import src.TTS;
+import src.STT; //classes importadas do pacote voz representam as funcionalidades de entrada e saida de voz
 import src.Comandos;//importa a classe Comandos
 import src.BancoDados;//pra gerenciar a conexão do banco com as operações de inserir e buscar dados
 
@@ -9,8 +9,8 @@ import java.io.IOException; // para lidar com os erros da entrada e saída de da
 import java.sql.SQLException; //para lidar com os erros do sql
 
 public class Assistente { //Assistente é a classe principal que vai organizar o comportamento do assistente, as outras classes precisam instância-la para acessar as suas funcionalidades
-    private TTS tts;
-    private STT stt;
+    private final TTS tts;
+    private final STT stt;
     private Comandos comandos; //sao privates pois são usados pela classe internamente
 
     public Assistente() throws SQLException, IOException { //construtor, chamado toda vez que é criado um objeto da classe, também pode lançar exceções

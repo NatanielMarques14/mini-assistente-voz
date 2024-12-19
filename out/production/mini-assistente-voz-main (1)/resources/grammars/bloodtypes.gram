@@ -1,0 +1,10 @@
+#JSGF V1.0;
+grammar bloodtypes;
+
+// Regras internas para simplificar
+<bloodGroup> = a | b | ab | o;
+<rhesusFactor> = positive | negative | plus | minus;
+
+
+// Regra pública para reconhecimento
+public <bloodType> = <bloodGroup> [<rhesusFactor>];

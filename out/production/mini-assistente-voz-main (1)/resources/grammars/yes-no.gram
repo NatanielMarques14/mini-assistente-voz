@@ -1,0 +1,4 @@
+#JSGF V1.0;
+grammar commands;
+
+public <yes-no> = ( yes | no );

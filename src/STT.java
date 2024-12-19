@@ -11,7 +11,6 @@ import java.util.logging.Logger;
 
 public class STT {
     private LiveSpeechRecognizer recognizer;
-    private Configuration configuration;
     private boolean isRecognizing;
 
     // Construtor: Inicializa a configuração e o reconhecedor
@@ -20,7 +19,7 @@ public class STT {
             // Ajusta o nível de log para SEVERE (apenas erros críticos)
             Logger.getLogger("edu.cmu.sphinx").setLevel(Level.SEVERE);
 
-            configuration = new Configuration();
+            Configuration configuration = new Configuration();
 
             // Configuração do modelo acústico
             configuration.setAcousticModelPath("file:resources/models/en-us");

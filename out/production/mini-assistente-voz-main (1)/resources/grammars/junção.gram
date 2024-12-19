@@ -1,0 +1,53 @@
+#JSGF V1.0;
+grammar junção;
+
+// Regras internas para simplificar
+<bloodGroup> = a | b | ab | o;
+<rhesusFactor> = positive | negative | plus | minus;
+
+
+// Regra pública para reconhecimento
+public <bloodType> = <bloodGroup> [<rhesusFactor>];
+
+
+public <comando> = ( exit | list | register);
+
+public <name> = noah | oliver | george | arthur | muhammad | leo | harry | oscar | archie | henry | theodore | freddie | jack | charlie | theo | alfie | jacob | thomas | finley | arlo | william | lucas | roman | tommy | isaac | teddy | alexander | luca | edward | james | joshua | albie | elijah | max | mohammed | reuben | mason | sebastian | rory | jude | louie | benjamin | ethan | adam | hugo | joseph | reggie | ronnie | harrison | louis | ezra | jaxon | logan | daniel | zachary | samuel | dylan | albert | hudson | hunter | frederick | david | rowan | jesse | frankie | toby | oakley | grayson | carter | riley | felix | finn | bobby | blake | sonny | caleb | gabriel | michael | jasper | alfred | otis | stanley | milo | mohammad | ralph | liam | chester | ellis | elliot | brody | charles | kai | rupert | yusuf | harvey | ollie | jackson | tobias | nathan | myles | leon | ibrahim | jenson | jayden | eli | ryan | elliott | jake | elias | ruben | miles | musa | beau | dominic | harley | leonardo | luke | jax | aaron | austin | vinnie | alex | matthew | aiden | patrick | cody | joey | billy | marley | robin | river | eric | dexter | vincent | jaxson | jonah | lewis | axel | levi | bodhi | ali | rex | parker | robert | cooper | ayaan | wilfred | remy | owen | brodie | enzo | yahya | lenny | john | tyler | muhammed | nathaniel | evan | jamie | zakariya | kit | otto | maxwell | lincoln | phoenix | nicholas | zayn | lorenzo | maximilian | sidney | idris | isaiah | joel | archer | xander | asher | seth | abel | rocco | connor | eesa | finlay | maximus | raphael | rio | callum | filip | aidan | kayden | rafael | christopher | frank | kevin | cameron | syed | abdullah | matteo | hamza | spencer | ted | zion | anthony | kian | cole | rayan | xavier | rudy | rafferty | ahmed | casper | jason | omar | rafe | nico | bertie | francis | matei | mateo | eddie | jordan | tristan | leonard | oskar | zain | eden | mohamed | douglas | flynn | barnaby | mustafa | kobe | ayan | peter | abdul | josiah | reginald | romeo | bailey | victor | martin | mark | kairo | micah | ezekiel | zac | barney | marcus | christian | adrian | lukas | ronan | umar | amir | monty | rhys | ahmad | hector | lennon | nicolas | franklin | jonathan | zack | bradley | quinn | marcel | hayden | ralphie | finnley | cruz | remi | zayan | jensen | zayd | cillian | jakub | milan | rohan | amari | cassius | coby | kaiden | julian | rayyan | damian | fraser | ivan | mylo | ace | conor | osian | andrew | kingsley | freddy | kylo | sam | stefan | ari | zayaan | lennie | teddie | wyatt | atlas | hendrix | walter | carson | ernest | hassan | aryan | lennox | erik | ilyas | corey | antoni | ayden | huxley | ismail | elis | dominik | harris | yunus | azaan | jeremiah | haris | aleksander | sami | kasper | nate | rufus | angus | luka | reign | arjun | cian | colby | ernie | ziggy | denis | fletcher | philip | darius | greyson | kobi | percy | casey | dougie | maddox | kaleb | alexandru | arham | ben | magnus | alan | lochlan | reece | rian | dennis | edison | jace | malachi | woody | zach | emmanuel | richard | zohan | andrei | isa | aarav | kiaan | santiago | ashton | chase | jan | zachariah | morgan | koby | layton | orson | atticus | malik | ryder | kacper | solomon | jimmy | danny | antonio | cairo | haider | rudi | timothy | declan | junior | yaqub | lachlan | shay | dawud | ewan | nikodem | bear | malakai | taylor | aron | buddy | hamish | simon | zane | hussain | ayman | harri | matthias | khalil | rome | hughie | sean | sullivan | tate | fabian | laurence | leighton | mikaeel | teodor | nolan | thiago | anas | odin | arnie | aydin | bruno | kenzo | loki | olly | hugh | leonidas | avery | diego | issac | jett | oisin | zak | ibraheem | ismaeel | nikolas | orlando | johnny | luis | vinny | cohen | jovan | laith | vlad | idrees | wilbur | aahil | ayyub | jaxx | khalid | osman | aadam | sulaiman | tadhg | tommy-lee | august | hadley | kyro | usman | beauden | joe | ozzy | rueben | tomos | zakaria | alvey | archibald | lucian | marshall | marco | neo | abraham | jay | kyrie | macsen | raife | bilal | jago | lowen | miller | orion | ray | travis | eduard | franciszek | koa | maverick | maxim | paul | tymon | kobie | mathias | ruairi | stephen | tiago | brian | matias | asa | bowie | heath | ivar | mikael | yaseen | caspar | ianis | ishaan | lawrence | zayyan | aayan | ayub | hashim | niall | preston | theodor | hari | judah | noel | oliwier | rares | rayaan | ashley | cassian | edwin | fox | kane | lando | montgomery | olivier | presley | robbie | teo | dion | emilio | alby | brandon | jaiden | raheem | dante | georgie | kody | kyle | laurie | reid | tomas | yuvraj | caelan | ian | jac | natan | szymon | armaan | dawson | forrest | huzaifa | ioan | mario | niko | sulayman | troy | zaviyar | clay | deen | keegan | angelo | aubrey | caspian | elio | fred | mikolaj | ronald | zayden | faris | fergus | harlan | keyaan | killian | lucca | veer | amos | brooklyn | forest | harlow | jonas | raymond | tudor | yousef | alistair | andre | dean | kabir | ned | vladimir | aaryan | ayaz | dillon | josh | vihaan | yousuf | zander | aris | arjan | hasan | kieran | ralphy | aariz | alessandro | fionn | hadi | karson | miguel | samson | sultan | artie | aston | bodie | israel | lawson | luan | rafi | wesley | zaid | jaden | kayson | krish | prince | saint | ahad | andreas | colton | emerson | emrys | karim | layth | omari | zayne | arlen | benedict | calvin | deniz | francesco | hamzah | imran | valentino | zakariyya | bentley | cai | cyrus | emmett | euan | fredrick | kyron | moses | sunny | alec | bjorn | bryan | deacon | giovanni | haroon | henley | issa | jayce | lorcan | suleiman | talha | yasin | clayton | henri | md | santino | albi | izaan | keanu | noa | tom | wiktor | azlan | damien | esa | justin | maksymilian | marlow | brayden | daniyal | emir | gray | herbie | subhan | wren | alexandros | emil | jamal | karter | mckenzie | omer | shayan | zidan | zorawar | arnold | artur | bruce | denny | eisa | hakeem | izaiah | jaylen | kareem | michal | ren | riaan | scott | tyson | zidane | alvie | arley;
+
+public <yes-no> = ( yes | no );
+
+// Unidades simples
+<units> = one | two | three | four | five | six | seven | eight | nine;
+
+// Números de 10 a 19
+<teens> = ten | eleven | twelve | thirteen | fourteen | fifteen | sixteen | seventeen | eighteen | nineteen;
+
+// De zero a dezenove (zero incluído)
+<basic> = zero | <units> | <teens>;
+
+// Dezenas (20,30,40,...90)
+<tensWord> = twenty | thirty | forty | fifty | sixty | seventy | eighty | ninety;
+
+// De 0 a 99
+// 0-19 é <basic>
+// 20,30,...90 é <tensWord>
+// 21-29,31-39,...91-99 é <tensWord> <units>
+<oneToNinetyNine> = <basic> | (<tensWord> [<units>]);
+
+// De 0 a 30 (para compor o intervalo depois de cem)
+// 0-19 é <basic>
+// 20,21,...29 é twenty [<units>]
+// 30 é thirty
+<oneToThirty> = <basic> | twenty [<units>] | thirty;
+
+// 100 a 130
+// 100: one hundred
+// 101 a 130: one hundred and <oneToThirty>
+<oneHundredPrefix> = one hundred;
+<oneHundredToOneThirty> = <oneHundredPrefix> [and <oneToThirty>];
+
+// Combina tudo para ter 0 a 130
+<zeroToOneThirty> = <oneToNinetyNine> | <oneHundredToOneThirty>;
+
+// Regra pública que representa a idade de 0 a 130
+public <idade> = <zeroToOneThirty>;

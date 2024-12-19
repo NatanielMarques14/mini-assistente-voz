@@ -1,95 +1,75 @@
 package src;
 
-import java.sql.Connection;
-import java.sql.DriverManager;
-import java.sql.PreparedStatement;
-import java.sql.SQLException;
-import java.sql.ResultSet;//addei
+import java.sql.*;
 
-
-public class BancoDados{
+public class BancoDados {
     private static final String URL = "jdbc:mysql://localhost:3306/bancoDados";
     private static final String USER = "root@localhost";
     private static final String PASSWORD = "Jo08ma02@";
 
-
-
-    
-    public static boolean registerUser (String name, int age, String bloodType, String username, String password, String canDonate) throws SQLException{ //coloquei pra ser boolean
-        try(Connection conexao = DriverManager.getConnection(URL, USER, PASSWORD)){
-
-        //String colocarDadosPessoas = "INSERT INTO pessoas (nome, idade, tipoSanguineo, seDoador)";
-        //String colocarDadosUsuarios = "INSERT INTO usuarios (username, senha)";
-        String inserirPessoa = "INSERT INTO pessoas (nome, idade, tipoSanguineo, seDoador) VALUES (?, ?, ?, ?)";
-        String inserirUsuario = "INSERT INTO usuarios (username, senha) VALUES (?, ?)";
-
-        
-
-
-        //PreparedStatement inserirPessoas = conexao.prepareStatement(colocarDadosPessoas);
-        //PreparedStatement inserirUsuarios = conexao.prepareStatement(colocarDadosUsuarios);
-
-        try (PreparedStatement inserirPessoas = conexao.prepareStatement(inserirPessoa);
-        PreparedStatement inserirUsuarios = conexao.prepareStatement(inserirUsuario)) {
-        inserirPessoas.setString(1, name);
-        inserirPessoas.setInt(2, age);
-        inserirPessoas.setString(3, bloodType);
-        inserirPessoas.setString(4, canDonate);
-
-
-        inserirUsuarios.setString(1, username);
-        inserirUsuarios.setString(2, password);
-
-
-        //inserirPessoas.executeUpdate();
-        //inserirUsuarios.executeUpdate();
-        int pessoasInseridas = inserirPessoas.executeUpdate();
-        int usuariosInseridos = inserirUsuarios.executeUpdate();
-
-        return pessoasInseridas > 0 && usuariosInseridos > 0;
-        
-    }
-
-        //System.out.println("Dados atualizados");
-    }
-    catch(SQLException e){
-        System.out.println("Erro ao adicionar os dados: " + e.getMessage());
-        throw e;
-    }
-
-
-}
-
-/*public static void main(String[] s){
-    try{
-        BancoDados.registerUser("Filipe", 19, "AB", "filipeac", "1234", "Sim");
-    }
-    catch(SQLException e){
-        System.out.println("Erro: "+ e.getMessage());
-    }
-    
-*/
-
-public static String loginUser(String username, String password) throws SQLException {
-    try (Connection conexao = DriverManager.getConnection(URL, USER, PASSWORD)) {
-
-        String query = "SELECT * FROM usuarios WHERE username = ? AND senha = ?";
-        try (PreparedStatement statement = conexao.prepareStatement(query)) {
-            statement.setString(1, username);
-            statement.setString(2, password);
-
-            ResultSet resultSet = statement.executeQuery();
-            if (resultSet.next()) {
-                return resultSet.getString("username"); // Retorna o nome de usuário se a autenticação for bem-sucedida
-            } else {
-                return null; // Retorna null se as credenciais não forem válidas
+    public static String getNextUsername() throws SQLException {
+        try (Connection conexao = DriverManager.getConnection(URL, USER, PASSWORD)) {
+            String query = "SELECT username FROM usuarios ORDER BY id DESC LIMIT 1";
+            PreparedStatement stmt = conexao.prepareStatement(query);
+            ResultSet rs = stmt.executeQuery();
+            if (rs.next()) {
+                String lastUsername = rs.getString("username");
+                if (lastUsername.startsWith("user")) {
+                    int lastNumber = Integer.parseInt(lastUsername.replace("user", ""));
+                    return "user" + (lastNumber + 1);
+                }
             }
+            // Caso não haja usuários registrados, retorna o primeiro
+            return "user1";
+        }
+    }
+
+
+    public static String getPasswordFromUsername(String username) {
+        return username.replace("user", ""); // A senha será o número do username
+    }
+
+    public static void registerUser(String name, int age, String bloodType, String canDonate) throws SQLException {
+        try (Connection conexao = DriverManager.getConnection(URL, USER, PASSWORD)) {
+
+            // Gerar próximo username e senha
+            String username = getNextUsername();
+            String password = getPasswordFromUsername(username);
+
+
+            String insertPerson = "INSERT INTO pessoas (nome, idade, tipoSanguineo, seDoador) VALUES (?, ?, ?, ?)";
+            String insertUser = "INSERT INTO usuarios (username, senha) VALUES (?, ?)";
+
+            PreparedStatement stmtPerson = conexao.prepareStatement(insertPerson);
+            stmtPerson.setString(1, name);
+            stmtPerson.setInt(2, age);
+            stmtPerson.setString(3, bloodType);
+            stmtPerson.setString(4, canDonate);
+            stmtPerson.executeUpdate();
+
+            PreparedStatement stmtUser = conexao.prepareStatement(insertUser);
+            stmtUser.setString(1, username);
+            stmtUser.setString(2, password);
+            stmtUser.executeUpdate();
+
+            System.out.println("User registered successfully!");
+            System.out.println("Username: " + username + ", Password: " + password);
         }
 
-    } catch (SQLException e) {
-        System.out.println("Erro ao realizar login: " + e.getMessage());
-        throw e;
+        catch (SQLException e) {
+            System.out.println("Error while registering user: " + e.getMessage());
+            throw e;
+        }
     }
 
-}
+    public static void main(String[] args) {
+        try {
+            BancoDados.registerUser("Filipe", 19, "AB", "Sim");
+        } catch (SQLException e) {
+            System.out.println("Error: " + e.getMessage());
+        }
+    }
+
+    public static void registerUser(String name, int age, String bloodType, String username, String password, String canDonate) {
+    }
 }
