@@ -36,7 +36,7 @@ public class BancoDados{
 
                     // Insere dados na tabela "pessoas"
                     stmtPessoas.setString(1, "Admin");
-                    stmtPessoas.setInt(2, 20);
+                    stmtPessoas.setString(2, "twenty");
                     stmtPessoas.setString(3, "A");
                     stmtPessoas.setString(4, "yes");
                     stmtPessoas.executeUpdate();

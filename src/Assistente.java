@@ -39,7 +39,8 @@ public class Assistente {
             default:
                 tts.speak("Command not recognized. Please try again.");
                 start();
-        }
+                break;
+            }
     }
 
     private void handleRegistration() {
