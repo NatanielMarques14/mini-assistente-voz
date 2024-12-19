@@ -8,9 +8,13 @@ public class ListVoices {
         VoiceManager vm = VoiceManager.getInstance();
         Voice[] voices = vm.getVoices();
 
-        System.out.println("Vozes Disponíveis:");
-        for (Voice voice : voices) {
-            System.out.println(" - " + voice.getName());
+        if (voices.length == 0) {
+            System.err.println("Nenhuma voz foi encontrada.");
+        } else {
+            System.out.println("Vozes disponíveis:");
+            for (Voice voice : voices) {
+                System.out.println(" - " + voice.getName());
+            }
         }
     }
 }

@@ -9,7 +9,6 @@
   <!-- Adicionando as bibliotecas do FreeTTS -->
   <classpathentry kind="lib" path="lib/freetts.jar"/>
   <classpathentry kind="lib" path="lib/cmulex.jar"/>
-  <classpathentry kind="lib" path="lib/cmutimelex.jar"/>
   <classpathentry kind="lib" path="lib/en_us.jar"/>
   <classpathentry kind="lib" path= "lib/mysql-connector-j-9.1.0 (1)"/>
 </classpath>
