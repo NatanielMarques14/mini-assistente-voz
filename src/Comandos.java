@@ -1,49 +1,43 @@
 package src;
 
-import src.BancoDados;
-
 import java.sql.ResultSet;
-import java.sql.SQLException;
 import java.sql.SQLException;
 
 public class Comandos {
-    private BancoDados db;
+    private final BancoDados db;
 
-    public Comandos(BancoDados db) {
-        this.db = db;
+    public Comandos(){
+        db = new BancoDados();
     }
 
-    public boolean register(String name, String age, String bloodType, String canDonate, String pessoa_id, String password) {
+    public boolean register(String name, String age, String bloodType, String canDonate, String username, String password) {
         try {
-            BancoDados.registerUser(name, age, bloodType, canDonate, pessoa_id, password);
+            BancoDados.registerUser(name, age, bloodType, canDonate, username, password);
             return true;
         } catch (Exception e) {
             System.err.println("Error during registration: " + e.getMessage());
             return false;
         }
     }
-    
-    public boolean isAdmin(String username, String password) {
-        return username.equals("admin") && password.equals("1234");
-    }
-    
-    public ResultSet getAllUsers() throws SQLException {
-    BancoDados banco = new BancoDados();
-    return banco.getAllUsers();
-    }
 
-
-    public String login(String username, String password) {
+    public boolean login(String username, String password) {
         try {
-            ResultSet rs = db.login(pessoa_id, password);
-            if (rs.next()) {
-                return rs.getString("name");
-            } else {
-                return null;
-            }
+            return db.login(username, password);
         } catch (Exception e) {
             System.err.println("Error during login: " + e.getMessage());
-            return null;
+            return false;
+        }
+    }
+
+    public void listUsers() {
+        try {
+            ResultSet users = db.getAllUsers();
+            System.out.println("Usernames:");
+            while (users.next()) {
+                System.out.println(users.getString("username"));
+            }
+        } catch (Exception e) {
+            System.err.println("Error fetching users: " + e.getMessage());
         }
     }
 }
