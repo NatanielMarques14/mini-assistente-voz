@@ -82,7 +82,7 @@ public class Assistente {
             try {
                 ResultSet userInfo = comandos.getUserInfo(pessoa_id, password);
                 if (userInfo.next()) {
-                    System.out.println("User information: Name: " + userInfo.getString("name") + ", Age: " + userInfo.getInt("age") + ", Blood Type: " + userInfo.getString("bloodType") + ", Can Donate: " + userInfo.getString("canDonate"));
+                    System.out.println("User information: Name: " + userInfo.getString("name") + ", Age: " + userInfo.getString("age") + ", Blood Type: " + userInfo.getString("bloodType") + ", Can Donate: " + userInfo.getString("canDonate"));
                     tts.speak("Welcome, " + userInfo.getString("name") + "! Type 'exit' to end the program.");
                     handleUserExit();
                 } else {
