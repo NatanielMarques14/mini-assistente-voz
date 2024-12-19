@@ -4,6 +4,7 @@ import src.BancoDados;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.SQLException;
 
 public class Comandos {
     private BancoDados db;
@@ -12,10 +13,9 @@ public class Comandos {
         this.db = db;
     }
 
-    public boolean register(String name, int age, String bloodType,
-                            String username, String password, String canDonate) {
+    public boolean register(String name, String age, String bloodType, String canDonate, String pessoa_id, String password) {
         try {
-            db.registerUser(name, age, bloodType, username, password, canDonate);
+            BancoDados.registerUser(name, age, bloodType, canDonate, pessoa_id, password);
             return true;
         } catch (Exception e) {
             System.err.println("Error during registration: " + e.getMessage());
@@ -35,7 +35,7 @@ public class Comandos {
 
     public String login(String username, String password) {
         try {
-            ResultSet rs = db.login(username, password);
+            ResultSet rs = db.login(pessoa_id, password);
             if (rs.next()) {
                 return rs.getString("name");
             } else {

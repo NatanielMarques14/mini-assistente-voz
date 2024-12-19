@@ -1,32 +1,32 @@
 package src;
 
-import src.voz.TTS;
-import src.voz.STT; //classes importadas do pacote voz representam as funcionalidades de entrada e saida de voz
-import src.Comandos;//importa a classe Comandos
-import src.BancoDados;//pra gerenciar a conexão do banco com as operações de inserir e buscar dados
+import src.TTS;
+import src.STT;
+import src.Comandos;
+import src.BancoDados;
 
-import java.io.IOException; // para lidar com os erros da entrada e saída de dados
+import java.io.IOException;
 import java.sql.ResultSet;
-import java.sql.SQLException; //para lidar com os erros do sql
+import java.sql.SQLException;
 
-public class Assistente { //Assistente é a classe principal que vai organizar o comportamento do assistente, as outras classes precisam instância-la para acessar as suas funcionalidades
-    private TTS tts;
-    private STT stt;
-    private Comandos comandos; //sao privates pois são usados pela classe internamente
-    
-    
-    public Assistente() throws SQLException, IOException { //construtor, chamado toda vez que é criado um objeto da classe, também pode lançar exceções
+public class Assistente {
+    private final TTS tts;
+    private final STT stt;
+    private final Comandos comandos;
+    private static int userCounter = 1; // Counter for automatic pessoa_id and password generation
+
+    public Assistente() throws SQLException, IOException {
         tts = new TTS();
-        stt = new STT("comandos");
-        //bancoDados = new BancoDados();
-        comandos = new Comandos(new BancoDados());
+        stt = new STT("junção");
+        BancoDados db = new BancoDados();
+        comandos = new Comandos(db);
     }
 
-    public void start() { //inicia o mini-assistente
-        tts.speak("Welcome to the mini assistant. Please say a command like register, login or exit");
-        String comando = stt.getComando();
+    public void start() {
+        tts.speak("Hello, what would you like to do? Register, login, or exit?");
+        String command = stt.getComando();
 
-        switch (comando.toLowerCase()) {
+        switch (command.toLowerCase()) {
             case "register":
                 handleRegistration();
                 break;
@@ -34,44 +34,68 @@ public class Assistente { //Assistente é a classe principal que vai organizar o
                 handleLogin();
                 break;
             case "exit":
-                tts.speak("Exiting the assistant. Goodbye!");
+                tts.speak("Exiting. Goodbye!");
                 System.exit(0);
             default:
-                tts.speak("Command not recognized. Try again");
+                tts.speak("Command not recognized. Please try again.");
                 start();
-        }
+                break;
+            }
     }
 
-    private void handleRegistration() { //faz o registro
-        tts.speak("Say your name");
+    private void handleRegistration() {
+        tts.speak("Please say your name.");
         String name = stt.getComando();
 
-        tts.speak("Say your age");
-        int age = Integer.parseInt(stt.getComando()); //como o listen retorna uma string usamos a função do parseInt para converter em int
+        tts.speak("Please say your age.");
+        String age = stt.getComando();
 
-        tts.speak("Say your blood type");
+        tts.speak("Please say your blood type.");
         String bloodType = stt.getComando();
 
-        tts.speak("Say your username");
-        String username = stt.getComando();
-
-        tts.speak("Say your password");
-        String password = stt.getComando();
-
-        tts.speak("Can you donate blood?");
+        tts.speak("Are you eligible to donate blood? Answer 'Yes' or 'No'.");
         String canDonate = stt.getComando();
 
-        boolean success = comandos.register(name, age, bloodType, username, password, canDonate); //salva o registro no banco de dados
-        if (success) {
-            tts.speak("Registration successful!");
-        }
-        
-        else{ 
-            tts.speak("Registration failed, try again");
+        String pessoa_id = "user" + userCounter;
+        String password = String.valueOf(userCounter);
+        userCounter++;
 
+        boolean success = comandos.register(name, age, bloodType, canDonate, pessoa_id, password);
+        if (success) {
+            System.out.println("New user registered: pessoa_id: " + pessoa_id + ", Password: " + password);
+            tts.speak("Registration successful! Your pessoa_id is: " + pessoa_id + " and your password is: " + password);
+        } else {
+            tts.speak("Error during registration. Please try again.");
         }
-        tts.speak("What do you wanna do now? register, login or exit?"); //dá a possibilidade de escolher outras coisas para fazer após o registro
-        start(); 
+        start();
+    }
+
+    private void handleLogin() {
+        tts.speak("Please say your pessoa_id.");
+        String pessoa_id = stt.getComando();
+
+        tts.speak("Please say your password.");
+        String password = stt.getComando();
+
+        if (pessoa_id.equals("admin") && password.equals("1234")) {
+            handleAdminActions();
+        } else {
+            try {
+                ResultSet userInfo = comandos.getUserInfo(pessoa_id, password);
+                if (userInfo.next()) {
+                    System.out.println("User information: Name: " + userInfo.getString("name") + ", Age: " + userInfo.getInt("age") + ", Blood Type: " + userInfo.getString("bloodType") + ", Can Donate: " + userInfo.getString("canDonate"));
+                    tts.speak("Welcome, " + userInfo.getString("name") + "! Type 'exit' to end the program.");
+                    handleUserExit();
+                } else {
+                    tts.speak("Incorrect pessoa_id or password. Please try again.");
+                    start();
+                }
+            } catch (SQLException e) {
+                tts.speak("An error occurred during login. Please try again.");
+                e.printStackTrace();
+                start();
+            }
+        }
     }
 
     private void handleAdminCommands() {
@@ -103,23 +127,42 @@ public class Assistente { //Assistente é a classe principal que vai organizar o
 
     
 
-    private void handleLogin() {//faz o login 
-        tts.speak("Say your username");
-        String username = stt.getComando();
-    
-        tts.speak("Say your password");
-        String password = stt.getComando();
-    
-        String user = comandos.login(username, password);
-        if (user != null) {
-            if (comandos.isAdmin(username, password)) {
-                tts.speak("Welcome administrator! What would you like to do?");
-                handleAdminCommands();
-            } else {
-                tts.speak("Welcome, " + user + "! What would you like to do?");
-            }
+    private void handleAdminActions() {
+        tts.speak("Welcome, Admin. Type 'list' to list all users or 'exit' to end the program.");
+
+        String adminCommand = stt.getComando();
+        switch (adminCommand.toLowerCase()) {
+            case "list":
+                try {
+                    ResultSet allUsers = comandos.getAllUsers();
+                    while (allUsers.next()) {
+                        System.out.println("Name: " + allUsers.getString("name") + ", Age: " + allUsers.getString("age") + ", Blood Type: " + allUsers.getString("bloodType") + ", Can Donate: " + allUsers.getString("canDonate"));
+                    }
+                    tts.speak("User list printed to the terminal.");
+                } catch (SQLException e) {
+                    tts.speak("An error occurred while fetching the user list.");
+                    e.printStackTrace();
+                }
+                handleAdminActions();
+                break;
+            case "exit":
+                tts.speak("Exiting Admin mode. Goodbye!");
+                System.exit(0);
+            default:
+                tts.speak("Command not recognized. Please try again.");
+                handleAdminActions();
+        }
+    }
+
+    private void handleUserExit() {
+        String command = stt.getComando();
+        if (command.equalsIgnoreCase("exit")) {
+            tts.speak("Exiting. Goodbye!");
+            System.exit(0);
         } else {
-            tts.speak("Incorrect username or password. Please try again.");
+            tts.speak("Invalid command. Please type 'exit' to close the program.");
+            handleUserExit();
         }
     }
 }
+
