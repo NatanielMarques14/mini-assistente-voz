@@ -70,7 +70,6 @@ public class BancoDados{
         // Tabela pessoas
         stmtPessoas.setString(1, name);
         stmtPessoas.setString(2, age);
-        stmtPessoas.setString(2, age);
         stmtPessoas.setString(3, bloodType);
         stmtPessoas.setString(4, canDonate);
         stmtPessoas.executeUpdate();
