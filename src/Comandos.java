@@ -12,7 +12,7 @@ public class Comandos {
         this.db = db;
     }
 
-    public boolean register(String name, int age, String bloodType, String canDonate, String username, String password) {
+    public boolean register(String name, String age, String bloodType, String canDonate, String username, String password) {
         try {
             BancoDados.registerUser(name, age, bloodType, canDonate, username, password);
             return true;

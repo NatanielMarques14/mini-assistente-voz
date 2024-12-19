@@ -47,7 +47,7 @@ public class Assistente {
         String name = stt.getComando();
 
         tts.speak("Please say your age.");
-        int age = Integer.parseInt(stt.getComando());
+        String age = stt.getComando();
 
         tts.speak("Please say your blood type.");
         String bloodType = stt.getComando();

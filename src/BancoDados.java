@@ -52,7 +52,7 @@ public class BancoDados{
         }
     }
 
-    public static void registerUser (String name, int age, String bloodType, String username, String password, String canDonate) throws SQLException{ 
+    public static void registerUser (String name, String age, String bloodType, String username, String password, String canDonate) throws SQLException{ 
         try(Connection conexao = DriverManager.getConnection(URL, USER, PASSWORD)){
 
         //String colocarDadosPessoas = "INSERT INTO pessoas (nome, idade, tipoSanguineo, seDoador)";
@@ -69,7 +69,7 @@ public class BancoDados{
         
         // Tabela pessoas
         stmtPessoas.setString(1, name);
-        stmtPessoas.setInt(2, age);
+        stmtPessoas.setString(2, age);
         stmtPessoas.setString(3, bloodType);
         stmtPessoas.setString(4, canDonate);
         stmtPessoas.executeUpdate();
