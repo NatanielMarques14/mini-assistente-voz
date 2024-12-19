@@ -1,9 +1,9 @@
-package assistente;
+package src;
 
-import voz.TTS;
-import voz.STT; //classes importadas do pacote voz. representam as funcionalidades de entrada e saida de voz
-import comandos.Comandos;//importa a classe Comandos
-import dados.BancoDados;//pra gerenciar a conexão do banco com as operações de inserir e buscar dados
+import src.voz.TTS;
+import src.voz.STT; //classes importadas do pacote voz representam as funcionalidades de entrada e saida de voz
+import src.Comandos;//importa a classe Comandos
+import src.BancoDados;//pra gerenciar a conexão do banco com as operações de inserir e buscar dados
 
 import java.io.IOException; // para lidar com os erros da entrada e saída de dados
 import java.sql.SQLException; //para lidar com os erros do sql
