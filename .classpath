@@ -5,4 +5,9 @@
   
   <classpathentry kind="lib" path="lib/sphinx4-core-5prealpha-20160628.232526-10.jar"/>
   <classpathentry kind="lib" path="lib/sphinx4-data-5prealpha-20160628.232535-10.jar"/>
+  
+  <!-- Adicionando as bibliotecas do FreeTTS -->
+  <classpathentry kind="lib" path="lib/freetts.jar"/>
+  <classpathentry kind="lib" path="lib/cmulex.jar"/>
+  <classpathentry kind="lib" path="lib/en_us.jar"/>
 </classpath>

@@ -13,7 +13,7 @@ public class Assistente {
     private final TTS tts;
     private final STT stt;
     private final Comandos comandos;
-    private static int userCounter = 1; // Counter for automatic username and password generation
+    private static int userCounter = 1; // Counter for automatic pessoa_id and password generation
 
     public Assistente() throws SQLException, IOException {
         tts = new TTS();
@@ -56,14 +56,14 @@ public class Assistente {
         tts.speak("Are you eligible to donate blood? Answer 'Yes' or 'No'.");
         String canDonate = stt.getComando();
 
-        String username = "user" + userCounter;
+        String pessoa_id = "user" + userCounter;
         String password = String.valueOf(userCounter);
         userCounter++;
 
-        boolean success = comandos.register(name, age, bloodType, canDonate, username, password);
+        boolean success = comandos.register(name, age, bloodType, canDonate, pessoa_id, password);
         if (success) {
-            System.out.println("New user registered: Username: " + username + ", Password: " + password);
-            tts.speak("Registration successful! Your username is: " + username + " and your password is: " + password);
+            System.out.println("New user registered: pessoa_id: " + pessoa_id + ", Password: " + password);
+            tts.speak("Registration successful! Your pessoa_id is: " + pessoa_id + " and your password is: " + password);
         } else {
             tts.speak("Error during registration. Please try again.");
         }
@@ -71,23 +71,23 @@ public class Assistente {
     }
 
     private void handleLogin() {
-        tts.speak("Please say your username.");
-        String username = stt.getComando();
+        tts.speak("Please say your pessoa_id.");
+        String pessoa_id = stt.getComando();
 
         tts.speak("Please say your password.");
         String password = stt.getComando();
 
-        if (username.equals("admin") && password.equals("1234")) {
+        if (pessoa_id.equals("admin") && password.equals("1234")) {
             handleAdminActions();
         } else {
             try {
-                ResultSet userInfo = comandos.getUserInfo(username, password);
+                ResultSet userInfo = comandos.getUserInfo(pessoa_id, password);
                 if (userInfo.next()) {
                     System.out.println("User information: Name: " + userInfo.getString("name") + ", Age: " + userInfo.getInt("age") + ", Blood Type: " + userInfo.getString("bloodType") + ", Can Donate: " + userInfo.getString("canDonate"));
                     tts.speak("Welcome, " + userInfo.getString("name") + "! Type 'exit' to end the program.");
                     handleUserExit();
                 } else {
-                    tts.speak("Incorrect username or password. Please try again.");
+                    tts.speak("Incorrect pessoa_id or password. Please try again.");
                     start();
                 }
             } catch (SQLException e) {
@@ -107,7 +107,7 @@ public class Assistente {
                 try {
                     ResultSet allUsers = comandos.getAllUsers();
                     while (allUsers.next()) {
-                        System.out.println("Name: " + allUsers.getString("name") + ", Age: " + allUsers.getInt("age") + ", Blood Type: " + allUsers.getString("bloodType") + ", Can Donate: " + allUsers.getString("canDonate"));
+                        System.out.println("Name: " + allUsers.getString("name") + ", Age: " + allUsers.getString("age") + ", Blood Type: " + allUsers.getString("bloodType") + ", Can Donate: " + allUsers.getString("canDonate"));
                     }
                     tts.speak("User list printed to the terminal.");
                 } catch (SQLException e) {
