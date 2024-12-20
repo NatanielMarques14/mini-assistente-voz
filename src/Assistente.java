@@ -3,10 +3,9 @@ package src;
 import src.TTS;
 import src.STT;
 import src.Comandos;
-import src.BancoDados;
 
 import java.io.IOException;
-import java.sql.ResultSet;
+import java.util.Scanner;
 import java.sql.SQLException;
 
 public class Assistente {
@@ -15,11 +14,10 @@ public class Assistente {
     private final Comandos comandos;
     private static int userCounter = 1; // Counter for automatic pessoa_id and password generation
 
-    public Assistente() throws SQLException, IOException {
+    public Assistente() throws SQLException {
         tts = new TTS();
         stt = new STT("junção");
-        BancoDados db = new BancoDados();
-        comandos = new Comandos(db);
+        comandos = new Comandos();
     }
 
     public void start() {
@@ -70,69 +68,43 @@ public class Assistente {
     }
 
     private void handleLogin() {
-        tts.speak("Please say your pessoa_id.");
-        String pessoa_id = stt.getComando();
+        try (Scanner scanner = new Scanner(System.in)) {
+            tts.speak("Enter your pessoa_id.");
+            System.out.print("pessoa_id: ");
+            String pessoa_id = scanner.nextLine();
 
-        tts.speak("Please say your password.");
-        String password = stt.getComando();
+            tts.speak("Enter your password.");
+            System.out.print("Password: ");
+            String password = scanner.nextLine();
 
-        if (pessoa_id.equals("admin") && password.equals("1234")) {
-            handleAdminActions();
-        } else {
-            try {
-                ResultSet userInfo = comandos.getUserInfo(pessoa_id, password);
-                if (userInfo.next()) {
-                    System.out.println("User information: Name: " + userInfo.getString("name") + ", Age: " + userInfo.getString("age") + ", Blood Type: " + userInfo.getString("bloodType") + ", Can Donate: " + userInfo.getString("canDonate"));
-                    tts.speak("Welcome, " + userInfo.getString("name") + "! Type 'exit' to end the program.");
-                    handleUserExit();
-                } else {
-                    tts.speak("Incorrect pessoa_id or password. Please try again.");
-                    start();
-                }
-            } catch (SQLException e) {
-                tts.speak("An error occurred during login. Please try again.");
-                e.printStackTrace();
+            boolean loginSuccess = comandos.login(pessoa_id, password);
+            if (loginSuccess) {
+                System.out.println("Login successful! Options: 'exit' or 'list'");
+                handlePostLogin();
+            } else {
+                tts.speak("Incorrect pessoa_id or password. Please try again.");
                 start();
             }
         }
     }
 
-    private void handleAdminActions() {
-        tts.speak("Welcome, Admin. Type 'list' to list all users or 'exit' to end the program.");
-
-        String adminCommand = stt.getComando();
-        switch (adminCommand.toLowerCase()) {
-            case "list":
-                try {
-                    ResultSet allUsers = comandos.getAllUsers();
-                    while (allUsers.next()) {
-                        System.out.println("Name: " + allUsers.getString("name") + ", Age: " + allUsers.getString("age") + ", Blood Type: " + allUsers.getString("bloodType") + ", Can Donate: " + allUsers.getString("canDonate"));
-                    }
-                    tts.speak("User list printed to the terminal.");
-                } catch (SQLException e) {
-                    tts.speak("An error occurred while fetching the user list.");
-                    e.printStackTrace();
-                }
-                handleAdminActions();
-                break;
-            case "exit":
-                tts.speak("Exiting Admin mode. Goodbye!");
-                System.exit(0);
-            default:
-                tts.speak("Command not recognized. Please try again.");
-                handleAdminActions();
-        }
-    }
-
-    private void handleUserExit() {
-        String command = stt.getComando();
-        if (command.equalsIgnoreCase("exit")) {
-            tts.speak("Exiting. Goodbye!");
-            System.exit(0);
-        } else {
-            tts.speak("Invalid command. Please type 'exit' to close the program.");
-            handleUserExit();
+    private void handlePostLogin() {
+        try (Scanner scanner = new Scanner(System.in)) {
+            String command = scanner.nextLine().toLowerCase();
+            switch (command) {
+                case "exit":
+                    tts.speak("Exiting. Goodbye!");
+                    System.exit(0);
+                    break;
+                case "list":
+                    comandos.listUsers();
+                    System.out.println("Options: 'exit' or 'list'");
+                    handlePostLogin();
+                    break;
+                default:
+                    tts.speak("Command not recognized. Please try again.");
+                    handlePostLogin();
+            }
         }
     }
 }
-

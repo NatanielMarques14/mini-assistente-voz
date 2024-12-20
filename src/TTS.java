@@ -9,6 +9,7 @@ public class TTS {
     private Voice voice;
 
     public TTS() {
+        
         try {
             VoiceManager vm = VoiceManager.getInstance();
             // Escolhe a voz padrão do sistema
