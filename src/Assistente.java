@@ -21,7 +21,7 @@ public class Assistente {
     }
 
     public void start() {
-        tts.speak("Hello, what would you like to do? Register, login, or exit?");
+        System.out.println("Hello, what would you like to do? Register, login, or exit?");
         String command = stt.getComando();
 
         switch (command.toLowerCase()) {
@@ -32,25 +32,26 @@ public class Assistente {
                 handleLogin();
                 break;
             case "exit":
-                tts.speak("Exiting. Goodbye!");
-                System.exit(0);
+            System.out.println("Exiting. Goodbye!");
+            System.exit(0);
             default:
-                tts.speak("Command not recognized. Please try again.");
+                System.out.println("Command not recognized. Please try again.");
                 start();
+                break;
         }
     }
 
     private void handleRegistration() {
-        tts.speak("Please say your name.");
+        System.out.println("Please say your name.");
         String name = stt.getComando();
 
-        tts.speak("Please say your age.");
+        System.out.println("Please say your age.");
         String age = stt.getComando();
 
-        tts.speak("Please say your blood type.");
+        System.out.println("Please say your blood type.");
         String bloodType = stt.getComando();
 
-        tts.speak("Are you eligible to donate blood? Answer 'Yes' or 'No'.");
+        System.out.println("Are you eligible to donate blood? Answer 'Yes' or 'No'.");
         String canDonate = stt.getComando();
 
         String username = "user" + userCounter;
@@ -59,21 +60,21 @@ public class Assistente {
 
         boolean success = comandos.register(name, age, bloodType, canDonate, username, password);
         if (success) {
-            System.out.println("New user registered: Username: " + username + ", Password: " + password);
-            tts.speak("Registration successful! Your username is: " + username + " and your password is: " + password);
+        System.out.println("New user registered: Username: " + username + ", Password: " + password);
+        System.out.println("Registration successful! Your username is: " + username + " and your password is: " + password);
         } else {
-            tts.speak("Error during registration. Please try again.");
+            System.out.println("Error during registration. Please try again.");
         }
         start();
     }
 
     private void handleLogin() {
         try (Scanner scanner = new Scanner(System.in)) {
-            tts.speak("Enter your username.");
+            System.out.println("Enter your username.");
             System.out.print("Username: ");
             String username = scanner.nextLine();
 
-            tts.speak("Enter your password.");
+            System.out.println("Enter your password.");
             System.out.print("Password: ");
             String password = scanner.nextLine();
 
@@ -82,7 +83,7 @@ public class Assistente {
                 System.out.println("Login successful! Options: 'exit' or 'list'");
                 handlePostLogin();
             } else {
-                tts.speak("Incorrect username or password. Please try again.");
+                System.out.println("Incorrect username or password. Please try again.");
                 start();
             }
         }
@@ -93,7 +94,7 @@ public class Assistente {
             String command = scanner.nextLine().toLowerCase();
             switch (command) {
                 case "exit":
-                    tts.speak("Exiting. Goodbye!");
+                    System.out.println("Exiting. Goodbye!");
                     System.exit(0);
                     break;
                 case "list":
@@ -102,7 +103,7 @@ public class Assistente {
                     handlePostLogin();
                     break;
                 default:
-                    tts.speak("Command not recognized. Please try again.");
+                    System.out.println("Command not recognized. Please try again.");
                     handlePostLogin();
             }
         }
