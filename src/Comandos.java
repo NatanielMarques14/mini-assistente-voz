@@ -10,9 +10,9 @@ public class Comandos {
         db = new BancoDados();
     }
 
-    public boolean register(String name, String age, String bloodType, String canDonate, String pessoa_id, String password) {
+    public boolean register(String name, String age, String bloodType, String canDonate, String username, String password) {
         try {
-            BancoDados.registerUser(name, age, bloodType, canDonate, pessoa_id, password);
+            BancoDados.registerUser(name, age, bloodType, canDonate, username, password);
             return true;
         } catch (Exception e) {
             System.err.println("Error during registration: " + e.getMessage());
@@ -20,24 +20,21 @@ public class Comandos {
         }
     }
 
-    public boolean login(String pessoa_id, String password) {
+    public boolean login(String username, String password) {
         try {
-            ResultSet rs =db.login(pessoa_id, password);
-            return rs.next();
+            return db.login(username, password);
+        } catch (Exception e) {
+            System.err.println("Error during login: " + e.getMessage());
+            return false;
         }
-        catch (SQLException e) {
-                System.err.println("Error during login: " + e.getMessage());
-                return false;
-            }
-        
     }
 
     public void listUsers() {
         try {
             ResultSet users = db.getAllUsers();
-            System.out.println("pessoa_ids:");
+            System.out.println("Usernames:");
             while (users.next()) {
-                System.out.println(users.getString("pessoa_id"));
+                System.out.println(users.getString("username"));
             }
         } catch (Exception e) {
             System.err.println("Error fetching users: " + e.getMessage());

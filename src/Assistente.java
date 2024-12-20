@@ -1,6 +1,6 @@
 package src;
 
-import src.TTS;
+
 import src.STT;
 import src.Comandos;
 
@@ -9,20 +9,20 @@ import java.util.Scanner;
 import java.sql.SQLException;
 
 public class Assistente {
-    private final TTS tts;
+
     private final STT stt;
     private final Comandos comandos;
-    private static int userCounter = 1; // Counter for automatic pessoa_id and password generation
+    private static int userCounter = 1; // Counter for automatic username and password generation
 
     public Assistente() throws SQLException {
-        tts = new TTS();
+
         stt = new STT("junção");
         comandos = new Comandos();
     }
 
     public void start() {
-        tts.speak("Hello, what would you like to do? Register, login, or exit?");
-        String command = stt.getComando();
+        System.out.println("Hello, what would you like to do? Register, login, or exit?");
+        String command = stt.getComando("comando");
 
         switch (command.toLowerCase()) {
             case "register":
@@ -32,57 +32,58 @@ public class Assistente {
                 handleLogin();
                 break;
             case "exit":
-                tts.speak("Exiting. Goodbye!");
-                System.exit(0);
+            System.out.println("Exiting. Goodbye!");
+            System.exit(0);
             default:
-                tts.speak("Command not recognized. Please try again.");
+                System.out.println("Command not recognized. Please try again.");
                 start();
+                break;
         }
     }
 
     private void handleRegistration() {
-        tts.speak("Please say your name.");
-        String name = stt.getComando();
+        System.out.println("Please say your name.");
+        String name = stt.getComando("nome");
 
-        tts.speak("Please say your age.");
-        String age = stt.getComando();
+        System.out.println("Please say your age.");
+        String age = stt.getComando("idade");
 
-        tts.speak("Please say your blood type.");
-        String bloodType = stt.getComando();
+        System.out.println("Please say your blood type.");
+        String bloodType = stt.getComando("tipo sanguineo");
 
-        tts.speak("Are you eligible to donate blood? Answer 'Yes' or 'No'.");
-        String canDonate = stt.getComando();
+        System.out.println("Are you eligible to donate blood? Answer 'Yes' or 'No'.");
+        String canDonate = stt.getComando("se é doador");
 
-        String pessoa_id = "user" + userCounter;
+        String username = "user" + userCounter;
         String password = String.valueOf(userCounter);
         userCounter++;
 
-        boolean success = comandos.register(name, age, bloodType, canDonate, pessoa_id, password);
+        boolean success = comandos.register(name, age, bloodType, canDonate, username, password);
         if (success) {
-            System.out.println("New user registered: pessoa_id: " + pessoa_id + ", Password: " + password);
-            tts.speak("Registration successful! Your pessoa_id is: " + pessoa_id + " and your password is: " + password);
+        System.out.println("New user registered: Username: " + username + ", Password: " + password);
+        System.out.println("Registration successful! Your username is: " + username + " and your password is: " + password);
         } else {
-            tts.speak("Error during registration. Please try again.");
+            System.out.println("Error during registration. Please try again.");
         }
         start();
     }
 
     private void handleLogin() {
         try (Scanner scanner = new Scanner(System.in)) {
-            tts.speak("Enter your pessoa_id.");
-            System.out.print("pessoa_id: ");
-            String pessoa_id = scanner.nextLine();
+            System.out.println("Enter your username.");
+            System.out.print("Username: ");
+            String username = scanner.nextLine();
 
-            tts.speak("Enter your password.");
+            System.out.println("Enter your password.");
             System.out.print("Password: ");
             String password = scanner.nextLine();
 
-            boolean loginSuccess = comandos.login(pessoa_id, password);
+            boolean loginSuccess = comandos.login(username, password);
             if (loginSuccess) {
                 System.out.println("Login successful! Options: 'exit' or 'list'");
                 handlePostLogin();
             } else {
-                tts.speak("Incorrect pessoa_id or password. Please try again.");
+                System.out.println("Incorrect username or password. Please try again.");
                 start();
             }
         }
@@ -93,7 +94,7 @@ public class Assistente {
             String command = scanner.nextLine().toLowerCase();
             switch (command) {
                 case "exit":
-                    tts.speak("Exiting. Goodbye!");
+                    System.out.println("Exiting. Goodbye!");
                     System.exit(0);
                     break;
                 case "list":
@@ -102,7 +103,7 @@ public class Assistente {
                     handlePostLogin();
                     break;
                 default:
-                    tts.speak("Command not recognized. Please try again.");
+                    System.out.println("Command not recognized. Please try again.");
                     handlePostLogin();
             }
         }

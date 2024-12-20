@@ -42,7 +42,7 @@ public class BancoDados {
     }
 
     // Método de login
-    public ResultSet login(String pessoa_id, String password) throws SQLException {
+    public boolean login(String pessoa_id, String password) throws SQLException {
         String sql = "SELECT pessoas.nome FROM usuarios " +
                      "INNER JOIN pessoas ON usuarios.pessoa_id = pessoas.id " +
                      "WHERE usuarios.pessoa_id = ? AND usuarios.senha = ?";
@@ -50,7 +50,8 @@ public class BancoDados {
              PreparedStatement stmt = conn.prepareStatement(sql)) {
             stmt.setString(1, pessoa_id);
             stmt.setString(2, password);
-            return stmt.executeQuery();
+            ResultSet rs = stmt.executeQuery();
+            return rs.next();
         }
     }
 
@@ -63,4 +64,3 @@ public class BancoDados {
         }
     }
 }
-

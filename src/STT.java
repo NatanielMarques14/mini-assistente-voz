@@ -46,13 +46,13 @@ public class STT {
         }
     }
 
-    public String getComando() {
+    public String getComando(String comander) {
         String fala = null;
         SpeechResult result;
         try {
             recognizer.startRecognition(true);
             isRecognizing = true;
-            System.out.println("Diga o comando:");
+            System.out.println("Diga o "+ comander + ": ");
 
             // Obtém o resultado da fala
             while ((result = recognizer.getResult()) != null) {
