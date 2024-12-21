@@ -22,14 +22,15 @@ public class Assistente {
 
     public void start() {
         System.out.println("Hello, what would you like to do? Register, login, or exit?");
-        String command = stt.getComando("comando");
+        String command = "login";
+        //stt.getComando("comando");
 
         switch (command.toLowerCase()) {
             case "register":
                 handleRegistration();
                 break;
             case "login":
-                handleLogin();
+            handlePostLogin();
                 break;
             case "exit":
             System.out.println("Exiting. Goodbye!");
@@ -72,7 +73,7 @@ public class Assistente {
         try (Scanner scanner = new Scanner(System.in)) {
             System.out.println("Enter your username.");
             System.out.print("Username: ");
-            String username = scanner.nextLine();
+            int username = scanner.nextInt();
 
             System.out.println("Enter your password.");
             System.out.print("Password: ");

@@ -2,6 +2,7 @@ package src;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.List;
 
 public class Comandos {
     private final BancoDados db;
@@ -20,7 +21,7 @@ public class Comandos {
         }
     }
 
-    public boolean login(String username, String password) {
+    public boolean login(int username, String password) {
         try {
             return db.login(username, password);
         } catch (Exception e) {
@@ -30,14 +31,16 @@ public class Comandos {
     }
 
     public void listUsers() {
-        try {
-            ResultSet users = db.getAllUsers();
-            System.out.println("Usernames:");
-            while (users.next()) {
-                System.out.println(users.getString("username"));
-            }
-        } catch (Exception e) {
-            System.err.println("Error fetching users: " + e.getMessage());
+    try {
+        List<String> nomes = db.getAllUsers();
+        System.out.println("Nomes / se é doadores: ");
+        for (String nome : nomes) {
+            System.out.println(nome);
         }
+    } catch (SQLException e) {
+        System.err.println("Error fetching users: " + e.getMessage());
+        e.printStackTrace();
     }
+}
+
 }

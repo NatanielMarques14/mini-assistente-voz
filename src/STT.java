@@ -60,7 +60,6 @@ public class STT {
                 System.out.println("Você disse: " + comando);
 
                 if (comando != null) {
-                    System.out.println("Encerrando...");
                     fala = comando;
                     break; // Sai do loop
                 }

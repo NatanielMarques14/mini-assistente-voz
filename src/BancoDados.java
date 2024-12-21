@@ -1,6 +1,8 @@
 package src;
 
 import java.sql.*;
+import java.util.ArrayList;
+import java.util.List;
 
 public class BancoDados {
     private static final String URL = "jdbc:mysql://localhost:3306/bancoDados";
@@ -15,7 +17,7 @@ public class BancoDados {
         // Conexão com o banco
         try (Connection conexao = DriverManager.getConnection(URL, USER, PASSWORD)) {
             String sqlPessoas = "INSERT INTO pessoas (nome, idade, tipoSanguineo, seDoador) VALUES (?, ?, ?, ?)";
-            String sqlUsuarios = "INSERT INTO usuarios (pessoa_id, senha) VALUES (?, ?)";
+            String sqlUsuarios = "INSERT INTO usuarios (senha) VALUES (?)";
 
             // Inserir na tabela pessoas
             try (PreparedStatement stmtPessoas = conexao.prepareStatement(sqlPessoas);
@@ -29,8 +31,8 @@ public class BancoDados {
                 stmtPessoas.executeUpdate();
 
                 // Inserção na tabela usuarios
-                stmtUsuarios.setString(1, pessoa_id);
-                stmtUsuarios.setString(2, password);
+                stmtUsuarios.setString(1, password);
+                
                 stmtUsuarios.executeUpdate();
 
                 System.out.println("Usuário registrado com sucesso!");
@@ -42,25 +44,32 @@ public class BancoDados {
     }
 
     // Método de login
-    public boolean login(String pessoa_id, String password) throws SQLException {
+    public boolean login(int pessoa_id, String password) throws SQLException {
+        
         String sql = "SELECT pessoas.nome FROM usuarios " +
                      "INNER JOIN pessoas ON usuarios.pessoa_id = pessoas.id " +
                      "WHERE usuarios.pessoa_id = ? AND usuarios.senha = ?";
         try (Connection conn = DriverManager.getConnection(URL, USER, PASSWORD);
              PreparedStatement stmt = conn.prepareStatement(sql)) {
-            stmt.setString(1, pessoa_id);
-            stmt.setString(2, password);
+            stmt.setString(1, password);
             ResultSet rs = stmt.executeQuery();
             return rs.next();
         }
     }
 
     // Método para obter todos os usuários
-    public ResultSet getAllUsers() throws SQLException {
-        String sql = "SELECT * FROM pessoas";
-        try (Connection conn = DriverManager.getConnection(URL, USER, PASSWORD);
-             PreparedStatement stmt = conn.prepareStatement(sql)) {
-            return stmt.executeQuery();
+    public List<String> getAllUsers() throws SQLException {
+    List<String> nomes = new ArrayList<>();
+    String sql = "SELECT nome FROM pessoas";
+    try (Connection conn = DriverManager.getConnection(URL, USER, PASSWORD);
+         PreparedStatement stmt = conn.prepareStatement(sql);
+         ResultSet rs = stmt.executeQuery()) {
+        
+        while (rs.next()) {
+            nomes.add(rs.getString("nome"));
         }
     }
+    return nomes;
+}
+
 }
